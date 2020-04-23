@@ -1,0 +1,7 @@
+.blog-container{
+  display: grid ;
+    justify-content: center;
+    align-items: center;
+background-image: url("../images/dashboard-bg.jpg"); 
+  }
+

@@ -1,0 +1,28 @@
+.root{
+    
+    
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    background-color: #333 !important; 
+    color: #fff !important;
+}
+
+.MuiTypography-colorTextSecondary{
+    color: rgb(255,255,255,0.7) !important;
+}
+.media{
+    height: 350px !important;
+}
+
+.color-icon-button{
+    color: #fff !important;
+}
+
+.expand{
+        transform: rotate(0deg);
+        margin-left: auto;
+    }
+.expandOpen{
+    transform: rotate(180deg);
+    color: #fff !important;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "blog-it-up",
+  "version": "1.0.0",
+  "description": "Blogging App",
+  "main": "frontend/index.js",
+  "scripts": {
+    "dev":"concurrently \"cd frontend && npm start\" \"cd backend && npm start\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vipul Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vipulsnp/blog-it-up/issues"
+  },
+  "homepage": "https://github.com/vipulsnp/blog-it-up#readme"
+}

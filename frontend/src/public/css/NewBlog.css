@@ -1,0 +1,16 @@
+.new-blog-container{
+    min-width:100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../images/homepage-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.new-blog{
+    color: whitesmoke !important;
+    max-width: 90%;
+}

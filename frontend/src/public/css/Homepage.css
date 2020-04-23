@@ -1,0 +1,60 @@
+
+.homepage{
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-image: url('../images/homepage-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.log-reg{
+    width: 100%;
+    margin-left:70%;
+}
+.hide{
+    display: none ;
+}
+
+.form{
+    display: block;
+    max-width: 70%;
+    color: wheat;
+}
+
+.login_link{
+    color:gold !important;
+}
+
+.MuiTypography-root{
+    margin-top:15px !important;
+}
+
+.MuiButton-root{
+    margin-top:15px !important;
+}
+
+.MuiFormLabel-root{
+    font-weight: 550 !important;
+    color: white !important;
+}
+.MuiInputBase-input{
+    color: white !important;
+    font-weight: 500 !important;
+}
+.Mui-focused fieldset{
+    border-color: white !important;
+}
+
+
+
+@media only screen and (max-width: 800px){
+.log-reg {
+    margin-left: 25%!important;
+}
+
+}
+
