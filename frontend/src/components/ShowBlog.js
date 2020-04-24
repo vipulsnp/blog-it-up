@@ -11,7 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import AddCommentIcon from '@material-ui/icons/AddComment';
+import CommentIcon from '@material-ui/icons/Comment';
+import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -25,15 +26,24 @@ export default class ShowBlog extends Component{
     constructor(props){
         super(props);
         this.state={
-            expanded:[],
-            comment:""
+            comment:"",
+            commentVisible:[]
         }
+
     }
 
+    static getDerivedStateFromProps(props,state)
+    {
+        return({
+            commentVisible:props.commentVisible
+        });
+    }
+
+                                            // Expand the Card to Show Full Blog
     handleExpandClick = (e)=>{
         this.props.updateVisible(e);
     }
-
+                                            // Confirm deletion of Blog
     confirmDelete = (id)=>{
         var ans=prompt("Enter * delete * in CAPS to remove the blog !!");
         if(ans === "DELETE")
@@ -44,24 +54,30 @@ export default class ShowBlog extends Component{
         else
             alert("can't delete!");
     }
-
+                                        // Comment Input Change
     handleCommentChange = (e)=>{
         this.setState({
             comment:e.target.value
         });
     }
-
-    handleCommentSubmit = (e,id)=>{
+                                        // Show Comments on click
+    handleShowComments = (e)=>{
+        this.props.updateCommentVisible(e);
+    }
+                                        // Handle New Comment Submit
+     handleCommentSubmit=(e,id,index)=>{
 
         if(this.props.user === undefined)
         alert("Login first!!");
         else
         {
-            this.props.addComment(e,id,this.props.user.name,this.state.comment);
-            alert("Comment Submitted");
-            this.setState({
-                 comment:""
-            });
+            this.props.addComment(e,id,this.props.user.name,this.state.comment,index);
+            setTimeout(() =>{
+            var temp=this.state.commentVisible;
+            temp[index] = true;
+             this.setState({
+                comment: "",
+                commentVisible: temp })}, 2000);
         }
 
     }
@@ -129,8 +145,9 @@ export default class ShowBlog extends Component{
                 }
                 
                             <IconButton
-                            className={this.props.visible[index] ? "expandOpen" + " color-icon-button" : "expand" + " color-icon-button"}
+                                className={this.props.visible[index] ? "expandOpen" + " color-icon-button" : "expand" + " color-icon-button"}
                                 onClick={()=>this.handleExpandClick(index)}
+                                title={this.props.visible[index] ? "Hide More" : "Show More"}
                                 aria-expanded={this.props.visible[index]}
                                 size="medium"
                                 aria-label="show more"
@@ -138,29 +155,53 @@ export default class ShowBlog extends Component{
                                 <ExpandMoreIcon />
                           </IconButton>
 
-                                                {/* Comments Of the Blog */}      
-                            
-                    </Card>
+                           {
+                               this.props.canUpdate === false && this.state.commentVisible[index] === false &&
+                            <IconButton 
+                                className="color-icon-button"
+                                onClick={()=>this.handleShowComments(index)}
+                                title="Show Comments"
+                                size="medium"
+                                aria-label="Show Comments"
+                            > 
+                                <CommentIcon /> 
+                            </IconButton>
+                           }
 
-                    {/* Display All the Comments */}
-                    {
-                        !this.props.canUpdate ? 
-                        <div>
-                        <Comments comments={blogData.comments} />
-                    <form onSubmit={(e) => this.handleCommentSubmit(e, blogData._id)}>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            id="comment"
-                            label="Comment"
-                            name="comment"
-                            type="text"
-                            value={this.state.comment}
-                            onChange={this.handleCommentChange}
-                        />
-                    </form>  
-                    </div> : null } 
+                        {
+                            this.props.canUpdate === false && this.state.commentVisible[index] === true &&
+                            <IconButton
+                                className="color-icon-button"
+                                onClick={() => this.handleShowComments(index)}
+                                title="Hide Comments"
+                                size="medium"
+                                aria-label="Hide Comments"
+                            >
+                                <SpeakerNotesOffIcon />
+                            </IconButton>
+                        }
+                                                {/* Comments Of the Blog */}  
+                                                {/* Display All the Comments */}
+                        <Collapse in={this.state.commentVisible[index]} timeout="auto" unmountOnExit>
+                            <Comments comments={blogData.comments} />
+                        </Collapse> 
+                        {
+                            this.props.canUpdate === false &&
+                                    <form onSubmit={(e) => this.handleCommentSubmit(e, blogData._id,index)}>
+                                        <TextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            required
+                                            id="comment"
+                                            label="Comment"
+                                            name="comment"
+                                            type="text"
+                                            value={this.state.comment}
+                                            onChange={this.handleCommentChange}
+                                        />
+                                    </form>
+                        }
+                    </Card>
                 </div>
                 )
         });

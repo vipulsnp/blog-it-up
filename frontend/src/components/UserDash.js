@@ -20,7 +20,8 @@ export default class UserDash extends Component{
                 myBlog:false,
                 allBlog:true,
                 blogList:[],
-                visible_array:[]
+                visible_array:[],
+                comments_visible:[]
             }
         }
 
@@ -41,15 +42,18 @@ export default class UserDash extends Component{
 
                 var size=data.length;
                 var new_visible=[];
+                var new_comments_visible = [];
                 for(var i=0;i<size;i++)
                     {
                         new_visible.push(false);
+                        new_comments_visible.push(false);
                     }
                 this.setState({
                     myBlog: false,
                     allBlog: true,
                     blogList: data,
-                    visible_array:new_visible
+                    visible_array: new_visible,
+                    comments_visible: new_comments_visible
                 });
             }))
         }
@@ -60,7 +64,7 @@ export default class UserDash extends Component{
 
                                                    // Show All the Blogs
     clickAllBlogs =(e)=>{
-        e.preventDefault();
+        e.persist();
        this.fetchBlogs();
     }   
 
@@ -83,6 +87,7 @@ export default class UserDash extends Component{
 
                 var size = data.length;
                 var new_visible = [];
+               
                 for (var i = 0; i < size; i++) {
                     new_visible.push(false);
                 }
@@ -93,12 +98,8 @@ export default class UserDash extends Component{
                     blogList:data,
                     visible_array:new_visible
                 });
-            }))
+            }));
 
-
-
-                                // Set the States here
-       
     }   
 
 
@@ -108,7 +109,6 @@ export default class UserDash extends Component{
     }
 
     deleteBlog = (id)=>{
-
         var reqBody={
             id:id
         }
@@ -123,7 +123,7 @@ export default class UserDash extends Component{
             console.log(res);
             this.clickMyBlogs();
             alert("Blog Deleted Successfully !!!")
-        })
+        });
     }
 
 
@@ -146,7 +146,7 @@ export default class UserDash extends Component{
                 'Content-Type': 'application/json'
             },
         }).then(res=>res.json().then(data=>{
-            console.log(data);
+            this.clickAllBlogs(e);
         }));
     } 
 
@@ -169,6 +169,22 @@ export default class UserDash extends Component{
 
     }
 
+    updateCommentsVisible = (index)=>{
+        var new_array=[];
+        for(var i=0;i<this.state.comments_visible.length;i++)
+        {
+            if(i===index)
+            {
+                new_array.push(!this.state.comments_visible[i]);
+            }
+            else
+            new_array.push(this.state.comments_visible[i]);
+        }
+
+        this.setState({
+            comments_visible:new_array
+        })
+    }
 
                                 // Render The Component Here 
     render(){
@@ -216,6 +232,8 @@ export default class UserDash extends Component{
                         visible={this.state.visible_array} 
                         updateVisible={(index) => this.handleUpdateVisible(index)} 
                         addComment={(e,id,user,comment)=>this.addComment(e,id,user,comment)}
+                        commentVisible={this.state.comments_visible}
+                        updateCommentVisible={(index)=>this.updateCommentsVisible(index)}
                         deleteBlog={(id)=>this.deleteBlog(id)}
                     />
                 </div>

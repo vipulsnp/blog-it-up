@@ -36,18 +36,23 @@ export default class Comments extends Component{
 
     render(){
 
-       const Comments=this.state.comments.flat().map(comment=>{
+       const Comments=this.state.comments.reverse().map(comment=>{
         return(
-            <div>
-                <h3>{comment.author} - {comment.description}</h3>
+            <div key={comment._id} style={{textAlign:"left",margin:"0.1rem",padding:" 0 1rem"}}>
+                <p><em>{comment.author}</em> : {comment.description} </p>
+                <hr />
             </div>
         )
        });
 
         return(
-            <div>
-
-                <h3> Comments here :</h3>
+            <div style={{ 
+                            borderStyle: "solid", 
+                            borderWidth: "5px", 
+                            borderImageSource:"linear-gradient(45deg, rgb(0,143,104), rgb(250,224,66))",
+                            borderImageSlice:"1",
+                        }}
+            >
                 {Comments}
             </div>
         );

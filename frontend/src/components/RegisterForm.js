@@ -94,8 +94,6 @@ export default class RegisterForm extends Component {
             else
             {
                 res.json().then(data => {
-                    console.log(data);
-                    alert("Created the User"); 
                                                 // Set the Current User as The Logged in User
                     this.props.handleRegister(data);
                                                 // Redirect to the Dashboard page of the user 
