@@ -47,6 +47,15 @@ router.post('/get-blog',(req,res)=>{
         res.json(blog);
     });
 })
+                                                // Find and remove COmment using comment id
+    function removeComment(id)
+    {
+        Comment.deleteOne({
+            _id:id
+        }).then(res=>{
+            console.log("removed a comment",id);
+        })
+    }
 
                                                   // Find and Remove Blog
 
@@ -55,6 +64,13 @@ router.post('/get-blog',(req,res)=>{
         Blog.find({
             _id:id
         }).then(blogData=>{
+           // console.log(blogData[0].comments);
+                                                // Remove all the comments in the blog 
+            blogData[0].comments.map(comment=>{
+                console.log(comment);
+                removeComment(comment);
+
+            });
                                                 // Removing the Blog Id from the User Array
             User.updateOne(
 
@@ -69,7 +85,8 @@ router.post('/get-blog',(req,res)=>{
                     console.log(res);
                 });
             });
-        });
+            
+        })
 
     }
 

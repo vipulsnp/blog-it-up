@@ -6,8 +6,10 @@ let express         = require("express"),
     mongoose        = require("mongoose"),
     path            = require("path"),
     cors            = require("cors");
+require('dotenv').config();
 
-    mongoose.connect("mongodb://localhost/blog-it-up", { useNewUrlParser: true,useUnifiedTopology:true });
+
+mongoose.connect(process.env.MONGO_DB_PROD, { useNewUrlParser: true,useUnifiedTopology:true });
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

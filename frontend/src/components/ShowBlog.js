@@ -193,7 +193,7 @@ export default class ShowBlog extends Component{
                                             margin="normal"
                                             required
                                             id="comment"
-                                            label="Comment"
+                                            label="Add New Comment"
                                             name="comment"
                                             type="text"
                                             value={this.state.comment}
