@@ -192,7 +192,7 @@ router.post("/delete-blog",(req,res)=>{
     
     // delete the blog
     removeBlog(req.body.id);
-    res.json();
+    res.json({DeleteStatus:true});
 
 })
 
