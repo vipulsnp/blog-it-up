@@ -87,16 +87,19 @@ export default class UserDash extends Component{
 
                 var size = data.length;
                 var new_visible = [];
+                var new_comments_visible=[];
                
                 for (var i = 0; i < size; i++) {
                     new_visible.push(false);
+                    new_comments_visible.push(false);
                 }
 
                 this.setState({
                     allBlog: false,
                     myBlog: true,
                     blogList:data,
-                    visible_array:new_visible
+                    visible_array:new_visible,
+                    comments_visible: new_comments_visible
                 });
             }));
 
@@ -186,6 +189,14 @@ export default class UserDash extends Component{
         })
     }
 
+    editBlog =(data)=>{
+        this.props.editBlog(data);
+        setTimeout(() => {
+            this.props.history.push("/edit-blog");
+        }, 1000);
+
+    }
+
                                 // Render The Component Here 
     render(){
         return(
@@ -235,6 +246,7 @@ export default class UserDash extends Component{
                         commentVisible={this.state.comments_visible}
                         updateCommentVisible={(index)=>this.updateCommentsVisible(index)}
                         deleteBlog={(id)=>this.deleteBlog(id)}
+                        editBlog={(data)=>{this.editBlog(data)}}
                     />
                 </div>
             </div>

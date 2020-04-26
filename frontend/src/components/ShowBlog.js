@@ -54,6 +54,11 @@ export default class ShowBlog extends Component{
         else
             alert("can't delete!");
     }
+
+                                        // Edit Blog
+    editBlog = (blogData) =>{
+        this.props.editBlog(blogData);
+    } 
                                         // Comment Input Change
     handleCommentChange = (e)=>{
         this.setState({
@@ -128,6 +133,8 @@ export default class ShowBlog extends Component{
                         <IconButton 
                             aria-label="edit"
                             className="color-icon-button"
+                            onClick={()=>this.editBlog(blogData)}
+                            title="Edit Blog"
                         >
                             <EditIcon />
                         </IconButton> : null 
@@ -139,6 +146,7 @@ export default class ShowBlog extends Component{
                             aria-label="delete"
                             className="color-icon-button"
                             onClick={()=>this.confirmDelete(blogData._id)}
+                            title="Delete Blog"
                         >
                                 <DeleteForeverIcon />
                         </IconButton> : null
@@ -156,7 +164,7 @@ export default class ShowBlog extends Component{
                           </IconButton>
 
                            {
-                               this.props.canUpdate === false && this.state.commentVisible[index] === false &&
+                                this.state.commentVisible[index] === false &&
                             <IconButton 
                                 className="color-icon-button"
                                 onClick={()=>this.handleShowComments(index)}
@@ -169,7 +177,7 @@ export default class ShowBlog extends Component{
                            }
 
                         {
-                            this.props.canUpdate === false && this.state.commentVisible[index] === true &&
+                            this.state.commentVisible[index] === true &&
                             <IconButton
                                 className="color-icon-button"
                                 onClick={() => this.handleShowComments(index)}
@@ -185,8 +193,6 @@ export default class ShowBlog extends Component{
                         <Collapse in={this.state.commentVisible[index]} timeout="auto" unmountOnExit>
                             <Comments comments={blogData.comments} />
                         </Collapse> 
-                        {
-                            this.props.canUpdate === false &&
                                     <form onSubmit={(e) => this.handleCommentSubmit(e, blogData._id,index)}>
                                         <TextField
                                             variant="outlined"
@@ -200,7 +206,6 @@ export default class ShowBlog extends Component{
                                             onChange={this.handleCommentChange}
                                         />
                                     </form>
-                        }
                     </Card>
                 </div>
                 )
