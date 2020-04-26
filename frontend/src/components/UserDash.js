@@ -149,6 +149,9 @@ export default class UserDash extends Component{
                 'Content-Type': 'application/json'
             },
         }).then(res=>res.json().then(data=>{
+            if(this.state.myBlog === true)
+            this.clickMyBlogs(e);
+            else
             this.clickAllBlogs(e);
         }));
     } 
