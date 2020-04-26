@@ -1,112 +1,75 @@
-import React, { Component } from 'react'
-
-// Import All the Components here
+import React,{Component} from 'react'
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
-// Import All the CSS here
-
 import '../public/css/NewBlog.css'
 
-export default class EditBlog extends Component {
+export default class EditBlog extends Component{
 
-    constructor(props) {
+
+    constructor(props){
         super(props);
-
-        this.state = {
-            title: "",
-            blog: "",
-            success: false,
-            error: false
+        this.state={
+            title:"",
+            blog:""
         }
     }
 
-    async componentDidMount(){
 
-        var reqBody={
-            id:this.props.id
-        }
-        await fetch('api/get-blog', {
-            method: 'POST',
-            body: JSON.stringify(reqBody),
-            headers: {
-                'Accept': 'application / json',
-                'Content-Type': 'application/json'
-            },
-        }).then(res=>res.json().then(data=>{
-            console.log("Fetched Blog : ",data);
-            this.setState({
-                title:data.title,
-                blog:data.blog
-            });
-        }));
+    componentDidMount(){
+
+        this.setState({
+            title:this.props.data.title,
+            blog:this.props.data.blog
+        });
+    }
+
+
+    handleTitleChange = (e) =>{
+
+        this.setState({
+            title:e.target.value
+        });
     }
 
     handleBlogChange = (e) => {
+
         this.setState({
             blog: e.target.value
-        })
+        });
     }
 
-    handleTitleChange = (e) => {
-        this.setState({
-            title: e.target.value
-        })
-    }
+    handleSubmit = (e)=>{
 
-    // Handle Submit
-
-    handleSubmit = (e) => {
         e.preventDefault();
 
-        let blog = {
-            title: this.state.title,
-            blog: this.state.blog,
-            author: this.props.user.name,
-            author_id: this.props.user._id
+        const reqBody={
+            id:this.props.data._id,
+            title:this.state.title,
+            blog:this.state.blog
         }
 
-        fetch('api/new-blog', {
-            method: 'POST',
-            body: JSON.stringify(blog),
-            headers: {
-                'Accept': 'application / json',
-                'Content-Type': 'application/json'
-            },
-        }).then(res => {
 
-            if (res.status === 200) {
-                res.json().then(data => {
-                    console.log(data);
-                    this.setState({
-                        success: true
-                    })
-                })
+        fetch('/api/edit-blog',{
+
+            method:"POST",
+            body:JSON.stringify(reqBody),
+            headers:{
+                'Accept':"application/json",
+                "Content-Type":"application/json"
             }
-            else
-                this.setState({
-                    error: true
-                })
-        })
+        }).then(res=>res.json().then(data=>{
+            this.props.history.push("/user"); }));
     }
 
 
-    // Handle Create New Blog Click
-    handleReturn = (e) => {
-
-        this.props.history.push('/user');
-    }
-
-
-
-    render() {
-        return (
-            <div className="new-blog-container">
-                {/* Title of the Blog */}
+    render(){
+        return(
+            <div className="new-blog-container"> 
+            
                 <form className="new-blog" onSubmit={this.handleSubmit}>
-
-                    <h1>Write your New Blog </h1>
+                
+                                            <h1>Edit your Blog </h1>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -134,73 +97,14 @@ export default class EditBlog extends Component {
                         value={this.state.blog}
                         onChange={this.handleBlogChange}
                     />
-
-                    {
-                        this.state.success === false && this.state.error === false &&
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            className="submit"
-                            style={{ color: "green", fontWeight: "600", backgroundColor: "gold" }}
-                        >
-                            Submit Blog
-                        </Button>
-                    }
-
-                    {
-                        this.state.success === true &&
-                        <div>
-                            <h3
-                                style={{
-                                    color: "green",
-                                    fontWeight: "700",
-                                    backgroundColor: "rgb(193, 255, 100,0.6)",
-                                    borderStyle: "solid",
-                                    borderColor: "green",
-                                    borderWidth: "0.13rem",
-                                    borderRadius: "0.5rem"
-                                }}
-
-
-                            > Blog Created Successfully </h3>
-
-
-                            <Button
-                                onClick={this.handleReturn}
-                                variant="contained"
-                                className="submit"
-                                color="secondary"
-                            >
-                                Return to Dashboard
-                        </Button>
-                        </div>
-                    }
-
-                    {
-                        this.state.error === true &&
-                        <div>
-                            <h3
-                                style={{
-                                    color: "red",
-                                    fontWeight: "700",
-                                    backgroundColor: "rgb(0,0,0,0.6)",
-                                    borderStyle: "solid",
-                                    borderColor: "red",
-                                    borderWidth: "0.13rem",
-                                    borderRadius: "0.5rem"
-                                }}>
-                                Error Creating Blog !
-                        </h3>
-                            <Button
-                                onClick={this.handleReturn}
-                                variant="contained"
-                                className="submit"
-                                color="secondary"
-                            >
-                                Return To Dashboard
-                    </Button>
-                        </div>
-                    }
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        className="submit"
+                        style={{ color: "green", fontWeight: "600", backgroundColor: "gold" }}
+                    >
+                        Submit Blog
+                        </Button> 
                 </form>
 
 
