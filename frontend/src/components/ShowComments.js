@@ -36,7 +36,7 @@ export default class Comments extends Component{
 
     render(){
 
-       const Comments=this.state.comments.reverse().map(comment=>{
+       const Comments=this.state.comments.sort(function(a,b) {return a.date.slice(0,10) - b.date.slice(0,10); }).map(comment=>{
         return(
             <div key={comment._id} style={{textAlign:"left",margin:"0.1rem",padding:" 0 1rem"}}>
                 <p><em>{comment.author}</em> : {comment.description} </p>

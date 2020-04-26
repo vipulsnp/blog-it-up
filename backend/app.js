@@ -9,7 +9,7 @@ let express         = require("express"),
 require('dotenv').config();
 
 
-mongoose.connect(process.env.MONGO_DB_PROD, { useNewUrlParser: true,useUnifiedTopology:true });
+mongoose.connect(process.env.MONGO_DB_DEV, { useNewUrlParser: true,useUnifiedTopology:true });
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

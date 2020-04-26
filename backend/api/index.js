@@ -192,9 +192,28 @@ router.post("/delete-blog",(req,res)=>{
     
     // delete the blog
     removeBlog(req.body.id);
-    res.json();
+    res.json({DeleteStatus:true});
 
-})
+});
+
+                                            // Update Blog
+router.post("/edit-blog",(req,res)=>{
+
+                        // update blog
+
+        Blog.update(
+            {_id:req.body.id},
+            {
+                title:req.body.title,
+                blog:req.body.blog  
+            }
+            ).then(resp=>{
+                console.log(resp);
+                res.json({updated:true});
+
+            })
+
+});
 
 
                                             // All Blogs
