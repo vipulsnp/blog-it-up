@@ -1,6 +1,6 @@
 .root{
     
-    max-width:500px !important;
+    max-width:650px;
     margin-top: 10px !important;
     margin-bottom: 10px !important;
     background-color: #333 !important; 
@@ -23,9 +23,6 @@
     height: 350px !important;
 }
 
-.color-icon-button{
-    color: #fff !important;
-}
 
 .expand{
         transform: rotate(0deg);
@@ -34,4 +31,37 @@
 .expandOpen{
     transform: rotate(180deg);
     color: #fff !important;
+}
+
+
+@media only screen and (max-width:400px)
+{
+    .root{
+        max-width: 350px !important;
+    }
+}
+
+@media only screen and (min-width:650px)
+{
+    .root{
+        width:550px !important;
+        max-width: 550px !important;
+    }
+}
+
+
+@media only screen and (min-width:800px)
+{
+    .root{
+        width:650px !important;
+        max-width: 650px !important;
+    }
+}
+
+@media only screen and (min-width:1000px)
+{
+    .root{
+        width:750px !important;
+        max-width: 750px !important;
+    }
 }

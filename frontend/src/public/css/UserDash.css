@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Atomic+Age&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+
 .blog-container{
-  display: grid ;
+    display: grid ;
     justify-content: center;
     align-items: center;
-background-image: url("../images/dashboard-bg.jpg"); 
+    background-image: url("../images/dashboard-bg.jpg"); 
+  }
+
+  h1{
+    font-family: 'Rye', cursive;
   }
 
 ::-webkit-scrollbar {
@@ -16,4 +23,44 @@ background-image: url("../images/dashboard-bg.jpg");
 ::-webkit-scrollbar-thumb {
   background-color: darkgray;
   outline: 1px solid slategrey;
+}
+
+/*
+Overriding Styles  */
+
+.MuiMenu-list{
+  min-width: 200px;
+}
+
+.MuiListItem-root
+{
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.menuButton{
+  margin-right: 16px !important;
+}
+
+.title{
+  font-family: 'Atomic Age', cursive !important;
+  overflow: visible !important;
+}
+
+.color-icon-button{
+    color: #fff !important;
+}
+.app-bar{
+  background: #23074d; 
+ 
+background: -webkit-linear-gradient(to right, #cc5333, #23074d); 
+ 
+background: linear-gradient(to right, #cc5333, #23074d);
+}
+
+@media only screen and (max-width:700px)
+{
+  .menuButton{
+    margin-right: 0px !important;
+  }
 }
