@@ -1,4 +1,5 @@
 import React,{Component} from 'react'
+import { withRouter } from 'react-router-dom';
 
                                             // Import All the Components Here
 import Card from '@material-ui/core/Card';
@@ -21,7 +22,7 @@ import Comments from './ShowComments'
 // Import Css here
 import '../public/css/ShowBlog.css';
 
-export default class ShowBlog extends Component{
+class ShowBlog extends Component{
     
     constructor(props){
         super(props);
@@ -49,10 +50,9 @@ export default class ShowBlog extends Component{
         if(ans === "DELETE")
             {
                 this.props.deleteBlog(id);
-            console.log("deleted!");
             }
         else
-            alert("can't delete!");
+            alert("Deletion Aborted!");
     }
 
                                         // Edit Blog
@@ -72,8 +72,14 @@ export default class ShowBlog extends Component{
                                         // Handle New Comment Submit
      handleCommentSubmit=(e,id,index)=>{
 
+        e.preventDefault();
         if(this.props.user === undefined)
-        alert("Login first!!");
+        {
+            alert("Login to Add a Comment !!");
+            this.setState({
+                comment:""
+            });
+        }
         else
         {
             this.props.addComment(e,id,this.props.user.name,this.state.comment,index);
@@ -216,3 +222,5 @@ export default class ShowBlog extends Component{
         )
     }
 }
+
+export default withRouter(ShowBlog);
