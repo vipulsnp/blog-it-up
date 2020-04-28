@@ -5,6 +5,7 @@ import UserDash from './components/UserDash';
 import EditBlog from './components/EditBlog';
 import {Route,Switch} from 'react-router-dom';
 import './App.css';
+import SearchResult from './components/SearchResult';
 
 export default class App extends Component {
 
@@ -33,6 +34,7 @@ export default class App extends Component {
           <Switch>
             <Route exact path="/" render={(routeParams)=><Homepage handleAuth={(user)=>this.handleAuth(user)} {...routeParams}/>} />
             <Route exact path="/new-blog" render={(routeParams)=><NewBlog user={this.state.activeUser} {...routeParams} />} />
+            <Route exact path="/blogger/:search" render={(routeParams)=><SearchResult {...routeParams} /> } />
             <Route exact path="/user" render={(routeParams) => <UserDash editBlog={(data)=>this.handleBlogData(data)} user={this.state.activeUser} {...routeParams} />} />
             <Route exact path="/edit-blog" render={(routeParams)=><EditBlog data={this.state.blogData} {...routeParams} />} />
           </Switch>
