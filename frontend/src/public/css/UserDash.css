@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Atomic+Age&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
 
+*{
+  scroll-behavior: smooth !important;
+}
 .blog-container{
     display: grid ;
     justify-content: center;
@@ -47,6 +50,40 @@ Overriding Styles  */
   overflow: visible !important;
 }
 
+.searchIcon{
+  padding:0 16px;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}  
+
+
+.search{
+  position: relative;
+  background-color:transparent;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px;
+  margin-left: 32px;
+  width: auto;
+}
+
+
+
+.inputRoot{
+    color: inherit;
+  }
+
+  .inputInput{
+    padding:8px 8px 8px 0 !important;
+    padding-left: calc(1em + 32px) !important;
+    transition: width;
+    width: 100%;
+  }
+
 .color-icon-button{
     color: #fff !important;
 }
@@ -62,5 +99,17 @@ background: linear-gradient(to right, #cc5333, #23074d);
 {
   .menuButton{
     margin-right: 0px !important;
+  }
+
+  .search{
+    width: 100% !important;
+  margin-left: 32px !important;
+  }
+}
+
+@media only screen and (max-width:450px)
+{
+  .title{
+    display: none;
   }
 }
