@@ -6,6 +6,18 @@ let express = require("express"),
     router = express.Router();
 
 
+ router.post("/blogger/:id",(req,res)=>{
+
+
+    User.findOne({
+        _id:req.params.id
+    }).then(resp=>{
+        res.json(resp);
+    });
+
+ });  
+
+
                                                 // Add Blog To User
 
 function addBlogToUser(user, blog) {

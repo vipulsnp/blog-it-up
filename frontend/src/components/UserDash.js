@@ -3,11 +3,26 @@ import React, {Component} from 'react'
 // Import All the Required Components here
 
 
-import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 import ShowBlog from '../components/ShowBlog';
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade';
+import MenuIcon from '@material-ui/icons/Menu';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 // Import All the Css here
 
 import '../public/css/UserDash.css'
+import defaultProfile from '../public/images/profile-default.png'
 
 export default class UserDash extends Component{
 
@@ -21,7 +36,10 @@ export default class UserDash extends Component{
                 allBlog:true,
                 blogList:[],
                 visible_array:[],
-                comments_visible:[]
+                comments_visible:[],
+                anchorEl:null,
+                accountAnchor:null,
+                searchValue:""
             }
         }
 
@@ -30,6 +48,49 @@ export default class UserDash extends Component{
             this.fetchBlogs();
         }
 
+     handleClick = (e) => {
+        this.setState({
+            anchorEl:e.currentTarget});
+    };
+
+    handleAccountClick = (e) => {
+        this.setState({
+            accountAnchor: e.currentTarget
+        });
+    };
+
+    handleLogout = (e) =>{
+        e.preventDefault();
+        alert("logout clicked!");
+        this.handleClose();
+    }
+
+    toLogin = (e) =>{
+        e.preventDefault();
+        this.props.history.push("/");
+    }
+
+    handleSearchChange = (e) =>{
+        this.setState({
+            searchValue:e.target.value
+        });
+    }
+
+    handleSearchSubmit = (e) =>{
+
+        e.preventDefault();
+        console.log(this.state.searchValue);
+        window.open(`/blogger/${this.state.searchValue}`, "_blank");
+        this.setState({
+            searchValue:""
+        });
+    }
+     handleClose = () => {
+         this.setState({
+             anchorEl: null,
+             accountAnchor:null
+         });
+    };
                                                 /* Fetch all the Blogs */
         fetchBlogs(){
              fetch('/api/all-blogs', {
@@ -66,6 +127,8 @@ export default class UserDash extends Component{
     clickAllBlogs =(e)=>{
         e.persist();
        this.fetchBlogs();
+        this.handleClose();
+        window.scrollTo(0, 0);
     }   
 
     /* ------------------------------------------------------------------------------------------------------------------------------ */
@@ -102,6 +165,9 @@ export default class UserDash extends Component{
                     comments_visible: new_comments_visible
                 });
             }));
+
+            this.handleClose();
+        window.scrollTo(0, 0);
 
     }   
 
@@ -203,42 +269,145 @@ export default class UserDash extends Component{
                                 // Render The Component Here 
     render(){
         return(
-            <div> This is the user dashboard!! 
-                <Button
-                    onClick={this.clickMyBlogs}
-                    variant="contained"
-                    className="submit"
-                    style={{ color: "white", backgroundColor: "blue" }}
-                >
-                    My Blogs
-                </Button>
+            <div> 
+                <AppBar position="fixed" className="app-bar">
+                    <Toolbar>
 
-                <Button
-                    onClick={this.clickAllBlogs}
-                    variant="contained"
-                    className="submit"
-                    style={{ color: "white", backgroundColor: "blue" }}
-                >
-                    All Blogs
-                </Button>
 
-                <Button
-                    onClick={this.handleNewBlog}
-                    variant="contained"
-                    className="submit"
-                    style={{ color: "white", backgroundColor: "blue" }}
-                >
-                    New Blog
-                </Button>
+                        <Typography className="title" variant="h6" noWrap>
+                           Blog-It-Up
+                        </Typography>
 
-                { this.state.myBlog ? 
-                        <h1> My blogs</h1>: null 
-                }
 
-                { this.state.allBlog ?     
-                    <h1> ALL Blogs </h1> : null 
-                }
+                                                            {/* Search Field */}
+                        <form onSubmit={this.handleSearchSubmit}>                                    
+                        <div className="search">
+                            <div className="searchIcon">
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Find User"
+                                classes={{
+                                    root: "inputRoot",
+                                    input: "inputInput",
+                                }}
+                                value={this.state.searchValue}
+                                onChange={this.handleSearchChange}
+                            />
+                        </div></form>
+
+
+                        <div style={{ textAlign: "right",width:"100%" }}>
+
+                                                            {/* User Profile and Logout Option On Click */}
+                                    
+                        {
+                                this.props.user !== undefined ?
+                            Boolean(this.state.accountAnchor) ? 
+
+                                <IconButton
+                                    aria-controls="account-menu"
+                                    className="menuButton color-icon-button"
+                                    aria-haspopup="true"
+                                    onClick={this.handleClose}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            :
+                                <IconButton
+                                    aria-controls="account-menu"
+                                    className="menuButton color-icon-button"
+                                    aria-haspopup="false"
+                                    title="Profile"
+                                    onClick={this.handleAccountClick}
+                                >
+                                    <AccountCircleIcon />
+                                </IconButton> : null
+                        }
+
+                        { this.props.user !== undefined ?
+                            <Menu
+                                id="account-menu"
+                                anchorEl={this.state.accountAnchor}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                                keepMounted
+                                getContentAnchorEl={null}
+                                open={Boolean(this.state.accountAnchor)}
+                                onClose={this.handleClose}
+                                TransitionComponent={Fade}
+                            >
+                                <MenuItem disabled>
+                                    <Avatar alt="profile" src={defaultProfile} />
+                                </MenuItem>
+                                <MenuItem disabled>{this.props.user.name}</MenuItem>
+                                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                            </Menu> 
+                            :
+                            <IconButton
+                                    aria-controls="login"
+                                    className="menuButton color-icon-button"
+                                    aria-haspopup="false"
+                                    title="Login"
+                                    onClick={this.toLogin}
+                            >
+                                <ExitToAppIcon />
+                            </IconButton>
+                        }
+
+
+
+                                                            {/* Menu list */}
+                            {
+                                Boolean(this.state.anchorEl) ?
+
+                                    <IconButton 
+                                        aria-controls="fade-menu" 
+                                        className="menuButton color-icon-button" 
+                                        aria-haspopup="true"
+                                        onClick={this.handleClose}
+                                    >
+                                        <CloseIcon />
+                                    </IconButton>
+                                    :
+
+                                    <IconButton 
+                                        aria-controls="fade-menu" 
+                                        className="menuButton color-icon-button" 
+                                        aria-haspopup="false" 
+                                        title="Menu"
+                                        onClick={this.handleClick}
+                                    >
+                                        <MenuIcon />
+                                    </IconButton>
+                            }
+                            <Menu
+                                id="fade-menu"
+                                anchorEl={this.state.anchorEl}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                                keepMounted
+                                getContentAnchorEl={null}
+                                open={Boolean(this.state.anchorEl)}
+                                onClose={this.handleClose}
+                                TransitionComponent={Fade}
+                            >
+                                <MenuItem disabled={!Boolean(this.props.user)} onClick={this.clickMyBlogs}>My Blogs</MenuItem>
+                                <MenuItem onClick={this.clickAllBlogs}>All Blogs</MenuItem>
+                                <MenuItem disabled={!Boolean(this.props.user)} onClick={this.handleNewBlog}>New Blog</MenuItem>
+                            </Menu>
+                                                    {/* Menu List Ends */}
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                <Toolbar />
+                                                    {/* App Bar Ends here */}
                 <div className="blog-container">
+                    {this.state.myBlog ?
+                        <h1> My Blogs</h1> : null
+                    }
+
+                    {this.state.allBlog ?
+                        <h1> All Blogs </h1> : null
+                    }
                     <ShowBlog 
                         user={this.props.user}
                         canUpdate={this.state.myBlog} 
