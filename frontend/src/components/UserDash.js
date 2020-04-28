@@ -6,6 +6,8 @@ import React, {Component} from 'react'
 import CloseIcon from '@material-ui/icons/Close';
 import ShowBlog from '../components/ShowBlog';
 import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
@@ -15,6 +17,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 // Import All the Css here
 
@@ -35,7 +38,8 @@ export default class UserDash extends Component{
                 visible_array:[],
                 comments_visible:[],
                 anchorEl:null,
-                accountAnchor:null
+                accountAnchor:null,
+                searchValue:""
             }
         }
 
@@ -61,6 +65,26 @@ export default class UserDash extends Component{
         this.handleClose();
     }
 
+    toLogin = (e) =>{
+        e.preventDefault();
+        this.props.history.push("/");
+    }
+
+    handleSearchChange = (e) =>{
+        this.setState({
+            searchValue:e.target.value
+        });
+    }
+
+    handleSearchSubmit = (e) =>{
+
+        e.preventDefault();
+        console.log(this.state.searchValue);
+        window.open(`/blogger/${this.state.searchValue}`, "_blank");
+        this.setState({
+            searchValue:""
+        });
+    }
      handleClose = () => {
          this.setState({
              anchorEl: null,
@@ -104,6 +128,7 @@ export default class UserDash extends Component{
         e.persist();
        this.fetchBlogs();
         this.handleClose();
+        window.scrollTo(0, 0);
     }   
 
     /* ------------------------------------------------------------------------------------------------------------------------------ */
@@ -142,6 +167,7 @@ export default class UserDash extends Component{
             }));
 
             this.handleClose();
+        window.scrollTo(0, 0);
 
     }   
 
@@ -252,6 +278,25 @@ export default class UserDash extends Component{
                            Blog-It-Up
                         </Typography>
 
+
+                                                            {/* Search Field */}
+                        <form onSubmit={this.handleSearchSubmit}>                                    
+                        <div className="search">
+                            <div className="searchIcon">
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Find User"
+                                classes={{
+                                    root: "inputRoot",
+                                    input: "inputInput",
+                                }}
+                                value={this.state.searchValue}
+                                onChange={this.handleSearchChange}
+                            />
+                        </div></form>
+
+
                         <div style={{ textAlign: "right",width:"100%" }}>
 
                                                             {/* User Profile and Logout Option On Click */}
@@ -273,13 +318,14 @@ export default class UserDash extends Component{
                                     aria-controls="account-menu"
                                     className="menuButton color-icon-button"
                                     aria-haspopup="false"
+                                    title="Profile"
                                     onClick={this.handleAccountClick}
                                 >
                                     <AccountCircleIcon />
                                 </IconButton> : null
                         }
 
-                        { this.props.user !== undefined &&
+                        { this.props.user !== undefined ?
                             <Menu
                                 id="account-menu"
                                 anchorEl={this.state.accountAnchor}
@@ -295,7 +341,17 @@ export default class UserDash extends Component{
                                 </MenuItem>
                                 <MenuItem disabled>{this.props.user.name}</MenuItem>
                                 <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-                            </Menu>
+                            </Menu> 
+                            :
+                            <IconButton
+                                    aria-controls="login"
+                                    className="menuButton color-icon-button"
+                                    aria-haspopup="false"
+                                    title="Login"
+                                    onClick={this.toLogin}
+                            >
+                                <ExitToAppIcon />
+                            </IconButton>
                         }
 
 
@@ -318,6 +374,7 @@ export default class UserDash extends Component{
                                         aria-controls="fade-menu" 
                                         className="menuButton color-icon-button" 
                                         aria-haspopup="false" 
+                                        title="Menu"
                                         onClick={this.handleClick}
                                     >
                                         <MenuIcon />
@@ -333,9 +390,9 @@ export default class UserDash extends Component{
                                 onClose={this.handleClose}
                                 TransitionComponent={Fade}
                             >
-                                <MenuItem onClick={this.clickMyBlogs}>My Blogs</MenuItem>
+                                <MenuItem disabled={!Boolean(this.props.user)} onClick={this.clickMyBlogs}>My Blogs</MenuItem>
                                 <MenuItem onClick={this.clickAllBlogs}>All Blogs</MenuItem>
-                                <MenuItem onClick={this.handleNewBlog}>New Blog</MenuItem>
+                                <MenuItem disabled={!Boolean(this.props.user)} onClick={this.handleNewBlog}>New Blog</MenuItem>
                             </Menu>
                                                     {/* Menu List Ends */}
                         </div>
