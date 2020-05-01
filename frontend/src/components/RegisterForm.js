@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import firebase from "../firebase.js"
 
 
 // Import All the Components here
@@ -7,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/Cancel';
+import IconButton from '@material-ui/core/IconButton';
 
 // Import The css here
 import '../public/css/Homepage.css'
@@ -23,7 +26,7 @@ export default class RegisterForm extends Component {
             username:"",
             email: "",
             password: "",
-            password2:""
+            success: undefined
         }
     }
 
@@ -53,12 +56,6 @@ export default class RegisterForm extends Component {
         })
     }
 
-    handlePassword2Change = (e) => {
-        this.setState({
-            password2: e.target.value
-        })
-    }
-
 
     handleSubmit = (e) => {
 
@@ -67,46 +64,58 @@ export default class RegisterForm extends Component {
         let newUser = {
             "name": this.state.name,
             "username": this.state.username,
-            "email":this.state.email,
-            "password":this.state.password
+            "email":this.state.email
         }
+
+        const {email,password}=this.state;
 
         this.setState({
             name: "",
+            username: "",
             email: "",
-            password: "",
-            password2: "",
-            username:""
+            password: ""
         });
 
 
-        fetch('http://localhost:5000/api/create-user', {
-            method: 'POST',
-            body: JSON.stringify(newUser),
-            headers: {
-                'Accept': 'application / json',
-                'Content-Type': 'application/json'
-            },
-        }).then(res=>{
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(res=>{
 
-            if(res.status === 403)
-                alert("Alredy exists!!");
-            else
-            {
-                res.json().then(data => {
-                                                // Set the Current User as The Logged in User
-                    this.props.handleRegister(data);
-                                                // Redirect to the Dashboard page of the user 
-                    this.props.routeParams.history.push("/user");
-                })
-            }
+            fetch('http://localhost:5000/api/create-user', {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'Accept': 'application / json',
+                    'Content-Type': 'application/json'
+                },
+            }).then(res => {
+
+                    res.json().then(data => {
+                        // Set the Current User as The Logged in User
+                        this.props.handleRegister(data);
+                        // Redirect to the Dashboard page of the user 
+                        this.props.routeParams.history.push("/user");
+                    })
+                
+            });
+
+        }).catch(err=>{
+            this.setState({
+                success:false
+            });
         });
-
+        
     }
 
     handleClick = (e) => {
         this.props.switchRegister();
     }
+
+    handleClose = (e) => {
+        e.preventDefault();
+        this.setState({
+            success: undefined
+        });
+    }
+
 
     render() {
 
@@ -167,20 +176,7 @@ export default class RegisterForm extends Component {
                         value={this.state.password}
                         onChange={this.handlePasswordChange}
                     />
-                                                            {/*Confirm Password */}
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        required
-                        name="password2"
-                        label="Confirm Password"
-                        type="password"
-                        id="password2"
-                        value={this.state.password2}
-                        onChange={this.handlePassword2Change}
-                    />
-
+                                                        {/* Submit Button  */}
                     <Button
                         type="submit"
                         variant="contained"
@@ -195,6 +191,36 @@ export default class RegisterForm extends Component {
                                 {"Already have an account?Sign In"}
                             </Link>
                         </Typography>
+
+                        {
+                    this.state.success === false &&
+                    <h4
+                        style={{
+                            color: "red",
+                            fontWeight: "700",
+                            backgroundColor: "rgb(0,0,0,0.6)",
+                            borderStyle: "solid",
+                            borderColor: "red",
+                            borderWidth: "0.13rem",
+                            borderRadius: "0.5rem"
+                        }}
+                    >
+                        User with given Email already exists. &nbsp; &nbsp; &nbsp; 
+                         
+                         <IconButton
+                            aria-controls="close-error"
+                            style=  {{
+                                        color:"inherit"
+                                    }}
+                            aria-haspopup="false"
+                            onClick={this.handleClose}
+                        >
+                            <CancelIcon /> 
+                        </IconButton>
+                </h4>
+                }
+
+
                 </form>
 
             </div>

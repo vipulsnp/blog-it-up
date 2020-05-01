@@ -1,4 +1,5 @@
 import React,{Component} from 'react'
+import firebase from "../firebase.js";
 
 // Import All the Components here
 
@@ -6,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/Cancel';
+import IconButton from '@material-ui/core/IconButton';
 
 // Import The css here
 import '../public/css/Homepage.css'
@@ -19,7 +22,8 @@ export default class LoginForm extends Component{
 
         this.state={
             email:"",
-            password:""
+            password:"",
+            success:undefined
         }
     }
 
@@ -42,15 +46,16 @@ export default class LoginForm extends Component{
 
         let user = {
             "email": this.state.email,
-            "password": this.state.password
         }
-
+        const {email,password}=this.state;
         this.setState({
             email: "",
             password: ""
-        })
+        });
 
                                             // Check the credentials Here
+        firebase.auth().signInWithEmailAndPassword(email, password).then(res=>{
+
         fetch('api/login-user', {
             method: 'POST',
             body: JSON.stringify(user),
@@ -68,16 +73,30 @@ export default class LoginForm extends Component{
                     this.props.routeParams.history.push("/user");
 
                 })
-                    alert("Access granted!");
-                }
-            else
-                alert("Not found !! Denied Access ");   
-        })
+                } 
+        });
+
+    }).catch(err=>{
+        this.setState({
+            success:false
+        });
+    });
 
     }
 
     handleClick = (e) =>{
         this.props.switchLogin();
+    }
+
+    resetP = (e) =>{
+        this.props.resetP();
+    }
+
+    handleClose = (e) =>{
+        e.preventDefault();
+        this.setState({
+            success:undefined
+        });
     }
 
     
@@ -128,7 +147,7 @@ export default class LoginForm extends Component{
 
                     <div className="login_grid">
                         <Typography>
-                            <Link href="/passwordreset" className="login_link">
+                            <Link href="#" className="login_link" onClick={this.resetP}>
                                 Forgot password?
                             </Link>
                         </Typography>
@@ -138,7 +157,35 @@ export default class LoginForm extends Component{
                             </Link>
                         </Typography>
                     </div>
+                {
+                    this.state.success === false &&
+                    <h3
+                        style={{
+                            color: "red",
+                            fontWeight: "700",
+                            backgroundColor: "rgb(0,0,0,0.6)",
+                            borderStyle: "solid",
+                            borderColor: "red",
+                            borderWidth: "0.13rem",
+                            borderRadius: "0.5rem"
+                        }}
+                    >
+                        Incorrect Credentials !! &nbsp; &nbsp; &nbsp; 
+                         
+                         <IconButton
+                            aria-controls="close-error"
+                            style=  {{
+                                        color:"inherit"
+                                    }}
+                            aria-haspopup="false"
+                            onClick={this.handleClose}
+                        >
+                            <CancelIcon /> 
+                        </IconButton>
+                </h3>
+                }
                 </form>
+                
 
             </div>
         )           
