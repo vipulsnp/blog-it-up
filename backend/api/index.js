@@ -147,7 +147,6 @@ router.post("/create-user", (req, res) => {
         name:req.body.name,
         username:req.body.username,
         email:req.body.email,
-        password:req.body.password
     })
         .then(user => {
             res.json(user);         // Respond the request for register New User
@@ -179,7 +178,6 @@ router.post("/login-user",(req,res)=>{
 
     User.findOne({
         _id:req.body.email,
-        password:req.body.password
     }).then(user=>{
         if(user == null)
             res.status(401).json(user);
