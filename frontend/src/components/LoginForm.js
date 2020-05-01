@@ -9,7 +9,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 // Import The css here
 import '../public/css/Homepage.css'
 
@@ -23,6 +23,7 @@ export default class LoginForm extends Component{
         this.state={
             email:"",
             password:"",
+            loading:false,
             success:undefined
         }
     }
@@ -50,7 +51,8 @@ export default class LoginForm extends Component{
         const {email,password}=this.state;
         this.setState({
             email: "",
-            password: ""
+            password: "",
+            loading:true
         });
 
                                             // Check the credentials Here
@@ -67,6 +69,10 @@ export default class LoginForm extends Component{
             if(res.status === 200)
                 {
                 res.json().then(data => {
+
+                    this.setState({
+                        loading: false
+                    });
                                                 // Set the Current User as The Logged in User
                     this.props.handleSignIn(data);                            
                                                 // Redirect to the Dashboard page of the user 
@@ -78,7 +84,8 @@ export default class LoginForm extends Component{
 
     }).catch(err=>{
         this.setState({
-            success:false
+            success:false,
+            loading:false
         });
     });
 
@@ -134,6 +141,8 @@ export default class LoginForm extends Component{
                         value={this.state.password}
                         onChange={this.handlePasswordChange}
                     />
+                {
+                    this.state.loading === false ?
                 
                     <Button
                         type="submit"
@@ -142,8 +151,10 @@ export default class LoginForm extends Component{
                         style={{ color: "white", backgroundColor: "blue" }}
                     >
                         Sign In
-                    </Button>
-                        
+                    </Button> 
+                    :
+                    <CircularProgress color="secondary" thickness='4.0' />
+                }
 
                     <div className="login_grid">
                         <Typography>

@@ -10,6 +10,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Import The css here
 import '../public/css/Homepage.css'
@@ -26,6 +27,7 @@ export default class RegisterForm extends Component {
             username:"",
             email: "",
             password: "",
+            loading:false,
             success: undefined
         }
     }
@@ -73,7 +75,8 @@ export default class RegisterForm extends Component {
             name: "",
             username: "",
             email: "",
-            password: ""
+            password: "",
+            loading:true
         });
 
 
@@ -89,6 +92,9 @@ export default class RegisterForm extends Component {
             }).then(res => {
 
                     res.json().then(data => {
+                        this.setState({
+                            loading:false
+                        });
                         // Set the Current User as The Logged in User
                         this.props.handleRegister(data);
                         // Redirect to the Dashboard page of the user 
@@ -99,7 +105,8 @@ export default class RegisterForm extends Component {
 
         }).catch(err=>{
             this.setState({
-                success:false
+                success:false,
+                loading:false
             });
         });
         
@@ -177,6 +184,8 @@ export default class RegisterForm extends Component {
                         onChange={this.handlePasswordChange}
                     />
                                                         {/* Submit Button  */}
+                {
+                    this.state.loading === false ? 
                     <Button
                         type="submit"
                         variant="contained"
@@ -185,6 +194,9 @@ export default class RegisterForm extends Component {
                     >
                         Register
                     </Button>
+                    :
+                    <CircularProgress color="secondary" thickness='4.0' />
+                }
 
                         <Typography>
                             <Link href="#" className="login_link" onClick={this.handleClick}>

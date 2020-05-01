@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class PasswordReset extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ export default class PasswordReset extends Component {
         this.state = {
             email: "",
             validemail: "",
+            loading:false
         }
     }
 
@@ -23,14 +25,18 @@ export default class PasswordReset extends Component {
     }
     handleSubmit = (e) => {
 
+        this.setState({
+            loading:true
+        });
+
         const { email } = this.state;
         e.preventDefault();
         var auth = firebase.auth();
         var emailAddress = email;
         auth.sendPasswordResetEmail(emailAddress).then(res => {
-            this.setState({ validemail: 'true' })
+            this.setState({ validemail: 'true',loading:false })
         }).catch(err => {
-            this.setState({ validemail: 'false' })
+            this.setState({ validemail: 'false',loading:false })
         });
 
     }
@@ -73,7 +79,9 @@ export default class PasswordReset extends Component {
                         autoFocus
                     />
 
-                    <Button
+                {
+                    this.state.loading === false ? 
+                        <Button
                         type="submit"
                         color="secondary"
                         fullWidth
@@ -83,8 +91,9 @@ export default class PasswordReset extends Component {
                     >
                         Submit
                     </Button>
-                        
-
+                    :
+                    <CircularProgress color="secondary" thickness='4.0' /> 
+                }
                     <div className="login_grid">
                         <Typography>
                             <Link href="#" className="login_link" onClick={this.handleClick}>

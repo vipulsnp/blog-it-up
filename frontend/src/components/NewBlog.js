@@ -4,6 +4,7 @@ import React,{Component} from 'react'
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 // Import All the CSS here
@@ -19,7 +20,8 @@ export default class NewBlog extends Component{
             title: "",
             blog: "",
             success:false,
-            error:false
+            error:false,
+            loading:false
         }
     }
 
@@ -40,6 +42,9 @@ export default class NewBlog extends Component{
 
     handleSubmit = (e) =>{
         e.preventDefault();
+        this.setState({
+            loading:true
+        });
         
         let blog={
             title:this.state.title,
@@ -62,13 +67,15 @@ export default class NewBlog extends Component{
                 res.json().then(data => {
                     console.log(data);
                 this.setState({
-                    success: true
+                    success: true,
+                    loading:false
                 })
                 })
             } 
             else
                 this.setState({
-                    error: true
+                    error: true,
+                    loading:false
                 })
             })
     }
@@ -118,7 +125,7 @@ export default class NewBlog extends Component{
                 />
 
                 {
-                    this.state.success === false && this.state.error === false &&    
+                    this.state.success === false && this.state.error === false && this.state.loading === false &&   
                         <Button
                             type="submit"
                             variant="contained"
@@ -127,6 +134,13 @@ export default class NewBlog extends Component{
                         >
                             Submit Blog
                         </Button>   
+                }
+
+                {
+
+                    this.state.loading === true &&
+                        <CircularProgress color="secondary" />
+                        
                 }
 
                 {
