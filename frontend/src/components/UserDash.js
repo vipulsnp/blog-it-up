@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import firebase from '../firebase'
 
 // Import All the Required Components here
 
@@ -61,8 +62,12 @@ export default class UserDash extends Component{
 
     handleLogout = (e) =>{
         e.preventDefault();
-        alert("logout clicked!");
-        this.handleClose();
+       firebase.auth().signOut().then(res=>{
+           console.log("Logout Success");
+       }).catch(err=>{
+           console.log(err);
+       });
+            this.props.logout();
     }
 
     toLogin = (e) =>{
