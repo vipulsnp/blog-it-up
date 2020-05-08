@@ -115,7 +115,7 @@ export default class PasswordReset extends Component {
                                 borderRadius: "0.5rem"
                             }}
                         > 
-                            Email sent to the registered email. 
+                            Link sent to the registered email. 
                         </h4>
                     }
                     {
