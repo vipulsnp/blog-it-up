@@ -92,11 +92,13 @@ export default class RegisterForm extends Component {
             }).then(res => {
 
                     res.json().then(data => {
+                        localStorage.setItem('jwt', data.accessToken);
                         this.setState({
                             loading:false
                         });
+                        
                         // Set the Current User as The Logged in User
-                        this.props.handleRegister(data);
+                        this.props.handleRegister(data.user);
                         // Redirect to the Dashboard page of the user 
                         this.props.routeParams.history.push("/user");
                     })

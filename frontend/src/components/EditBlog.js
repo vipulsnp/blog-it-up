@@ -20,6 +20,11 @@ export default class EditBlog extends Component{
 
     componentDidMount(){
 
+        if(this.props.data === undefined){
+            this.props.history.replace('/error/forbidden');
+
+        }
+        else
         this.setState({
             title:this.props.data.title,
             blog:this.props.data.blog
@@ -67,7 +72,7 @@ export default class EditBlog extends Component{
             this.setState({
                 loading:false
             });
-            this.props.history.push("/user"); }));
+            this.props.history.replace("/user"); }));
     }
 
 
