@@ -3,6 +3,7 @@ import React,{Component} from 'react'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import '../public/css/NewBlog.css'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class EditBlog extends Component{
 
@@ -11,13 +12,19 @@ export default class EditBlog extends Component{
         super(props);
         this.state={
             title:"",
-            blog:""
+            blog:"",
+            loading:false
         }
     }
 
 
     componentDidMount(){
 
+        if(this.props.data === undefined){
+            this.props.history.replace('/error/forbidden');
+
+        }
+        else
         this.setState({
             title:this.props.data.title,
             blog:this.props.data.blog
@@ -42,6 +49,9 @@ export default class EditBlog extends Component{
     handleSubmit = (e)=>{
 
         e.preventDefault();
+        this.setState({
+            loading:true
+        });
 
         const reqBody={
             id:this.props.data._id,
@@ -59,7 +69,10 @@ export default class EditBlog extends Component{
                 "Content-Type":"application/json"
             }
         }).then(res=>res.json().then(data=>{
-            this.props.history.push("/user"); }));
+            this.setState({
+                loading:false
+            });
+            this.props.history.replace("/user"); }));
     }
 
 
@@ -97,6 +110,9 @@ export default class EditBlog extends Component{
                         value={this.state.blog}
                         onChange={this.handleBlogChange}
                     />
+                    {
+                        this.state.loading === false ? 
+                    
                     <Button
                         type="submit"
                         variant="contained"
@@ -104,7 +120,10 @@ export default class EditBlog extends Component{
                         style={{ color: "green", fontWeight: "600", backgroundColor: "gold" }}
                     >
                         Submit Blog
-                        </Button> 
+                    </Button> 
+                    :
+                        <CircularProgress color="secondary" thickness='4' />
+                }
                 </form>
 
 

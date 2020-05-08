@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 
 import LoginForm from '../components/LoginForm'
 import RegisterForm from '../components/RegisterForm' 
+import PasswordReset from '../components/resetPassword'
 
 // Import All the Css files here
 import '../public/css/Homepage.css';
@@ -17,7 +18,8 @@ export default class Homepage extends Component
         this.state={
             animate:false,  
             login_visible:true,
-            register_visible:false
+            register_visible:false,
+            resetP:false
         }
     }
 
@@ -27,7 +29,8 @@ export default class Homepage extends Component
         
             this.setState({ 
                             login_visible: false,
-                            register_visible: true
+                            register_visible: true,
+                            resetP:false
                         });
     }
 
@@ -37,13 +40,22 @@ export default class Homepage extends Component
 
         this.setState({
             register_visible: false,
-            login_visible: true
+            login_visible: true,
+            resetP:false
         })
     }
 
     // handle Authorization
     handleAuth = (user) =>{
         this.props.handleAuth(user);
+    }
+
+    resetP = () =>{
+        this.setState({
+            register_visible: false,
+            login_visible: false,
+            resetP: true
+        })
     }
 
                                                 // Render the Components here 
@@ -57,8 +69,15 @@ export default class Homepage extends Component
                             routeParams={this.props} 
                             switchLogin={this.switchLogin} 
                             handleSignIn={(user)=>this.handleAuth(user)} 
+                            resetP={this.resetP}
                             visible={this.state.login_visible} 
                         />
+
+                        < PasswordReset
+                            routeParams={this.props}
+                            visible={this.state.resetP}
+                            switchRegister={this.switchRegister}  
+                        />    
 
                         <RegisterForm 
                             routeParams={this.props} 

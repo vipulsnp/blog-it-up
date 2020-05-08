@@ -4,6 +4,7 @@ import React,{Component} from 'react'
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 // Import All the CSS here
@@ -19,11 +20,33 @@ export default class NewBlog extends Component{
             title: "",
             blog: "",
             success:false,
-            error:false
+            error:false,
+            loading:false
         }
     }
 
-
+    componentDidMount(){
+        let token=localStorage.getItem('jwt');
+        if(!token){
+            this.props.history.push('/error/forbidden');
+        }
+        else
+        {
+            fetch('/api/authtoken', {
+                method:"POST",
+                headers: { 
+                    "Content-type":"application/json",
+                    "authorization": "Bearer " + token 
+                }
+            }).then(res=>res.json().then(data=>{
+                if(data.verifyStatus === false)
+                {
+                    this.props.history.push('/error/forbidden');
+                    localStorage.removeItem('jwt');
+                }
+            }))
+        }
+    }
     handleBlogChange = (e)=>{
         this.setState({
             blog:e.target.value
@@ -40,12 +63,17 @@ export default class NewBlog extends Component{
 
     handleSubmit = (e) =>{
         e.preventDefault();
-        
+        this.setState({
+            loading:true
+        });
+        let token=localStorage.getItem('jwt');
+        var base64Url = token.split('.')[1];
+        var decodedValue = JSON.parse(window.atob(base64Url));
         let blog={
             title:this.state.title,
             blog:this.state.blog,
-            author:this.props.user.name,
-            author_id:this.props.user._id
+            author:decodedValue.name,
+            author_id:decodedValue.email
         }
 
         fetch('api/new-blog', {
@@ -60,15 +88,16 @@ export default class NewBlog extends Component{
             if (res.status === 200) 
             {
                 res.json().then(data => {
-                    console.log(data);
                 this.setState({
-                    success: true
+                    success: true,
+                    loading:false
                 })
                 })
             } 
             else
                 this.setState({
-                    error: true
+                    error: true,
+                    loading:false
                 })
             })
     }
@@ -77,7 +106,7 @@ export default class NewBlog extends Component{
     // Handle Create New Blog Click
     handleReturn = (e) =>{
         
-        this.props.history.push('/user');
+        this.props.history.push('/');
     }
 
 
@@ -118,7 +147,7 @@ export default class NewBlog extends Component{
                 />
 
                 {
-                    this.state.success === false && this.state.error === false &&    
+                    this.state.success === false && this.state.error === false && this.state.loading === false &&   
                         <Button
                             type="submit"
                             variant="contained"
@@ -127,6 +156,13 @@ export default class NewBlog extends Component{
                         >
                             Submit Blog
                         </Button>   
+                }
+
+                {
+
+                    this.state.loading === true &&
+                        <CircularProgress color="secondary" />
+                        
                 }
 
                 {

@@ -1,9 +1,10 @@
-let express = require("express"),
-    User = require("../models/User"),
-    Blog = require("../models/Blog"),
-    Comment=require("../models/Comment");
-    path = require("path"),
-    router = express.Router();
+let express     = require("express"),
+    User        = require("../models/User"),
+    Blog        = require("../models/Blog"),
+    Comment     = require("../models/Comment"),
+    path        = require("path"),
+    jwt         = require("jsonwebtoken"),
+    router      = express.Router();
 
 
  router.post("/blogger/:id",(req,res)=>{
@@ -17,6 +18,18 @@ let express = require("express"),
 
  });  
 
+                                                    /* Verify Token Function */
+function verifyToken(req, res, next) {
+
+    const recdHeader = req.headers['authorization'];
+    const receivedToken = recdHeader && recdHeader.split(' ')[1]
+    jwt.verify(receivedToken, process.env.ACCESS_TOKEN_KEY, (err, user) => {
+
+        if (err)
+            return res.json({verifyStatus:false});    // Forbidden
+        next();    // verified (Status : OK)
+    });
+}       
 
                                                 // Add Blog To User
 
@@ -147,10 +160,11 @@ router.post("/create-user", (req, res) => {
         name:req.body.name,
         username:req.body.username,
         email:req.body.email,
-        password:req.body.password
     })
         .then(user => {
-            res.json(user);         // Respond the request for register New User
+            const user_token = { email: user.email, name: user.name, username: user.username };
+            const accessToken = jwt.sign(user_token, process.env.ACCESS_TOKEN_KEY);                 // Create the token
+            res.json({user:user,accessToken:accessToken});         // Respond the request for register New User
         })
         .catch(error => {
             res.status(403).json(error);
@@ -165,9 +179,15 @@ router.post("/remove-user",(req,res)=>{
 
     User.findOne({
         _id:req.body.id
-    }).then(res=>{
-        res.blogs.forEach(id => {
-            console.log(id);
+    }).then(resp=>{
+        resp.blogs.forEach(id => {
+            removeBlog(id);
+        });
+
+        User.deleteOne({
+            _id:req.body.id
+        }).then(()=>{
+            res.status(200).json();
         });
     })
 
@@ -179,13 +199,18 @@ router.post("/login-user",(req,res)=>{
 
     User.findOne({
         _id:req.body.email,
-        password:req.body.password
     }).then(user=>{
         if(user == null)
             res.status(401).json(user);
         else
-            res.status(200).json(user);
-    })
+            {
+                
+            const user_token={email:user.email, name:user.name,username:user.username};
+            const accessToken = jwt.sign(user_token, process.env.ACCESS_TOKEN_KEY);                 // Create the token
+            res.status(200).json({ user: user, accessToken: accessToken});      
+            
+            }
+    });
 });
 
                                       
@@ -237,4 +262,13 @@ router.post("/all-blogs", (req, res) => {
 })
 
 
+                                            // Web Token Verification And Deletion
+
+
+                                                    // Verify the Token Post Route
+router.post('/authtoken', verifyToken, (req, res) => {
+    res.json({ verifyStatus: true })
+});
+
+                                                        
 module.exports = router;    

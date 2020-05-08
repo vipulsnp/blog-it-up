@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import firebase from '../firebase'
 
 // Import All the Required Components here
 
@@ -61,9 +62,47 @@ export default class UserDash extends Component{
 
     handleLogout = (e) =>{
         e.preventDefault();
-        alert("logout clicked!");
-        this.handleClose();
+       firebase.auth().signOut().then(res=>{
+           console.log("Logout Success");
+       }).catch(err=>{
+           console.log(err);
+       });
+            this.props.logout();
     }
+
+
+    handleAccountDelete = (e) =>{
+        e.preventDefault();
+        if(prompt("Enter your username to confirm deletion ") === this.props.user.username)
+        {
+            var reqBody={
+                            id:this.props.user._id
+                        }
+            fetch('api/remove-user', {
+                method: 'POST',
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Accept': 'application / json',
+                    'Content-Type': 'application/json'
+                },
+            }).then(res=>{
+                if(res.status === 200)
+                {
+                    firebase.auth().currentUser.delete().then(res=>{
+                        localStorage.removeItem('jwt');
+                        this.props.history.push('/');
+                        alert("User Deleted Successfully");
+                    });
+                }  
+            });
+        }
+        else
+        {
+            alert("Confirmation failed! Cannot delete Account");
+        }
+       
+    }
+
 
     toLogin = (e) =>{
         e.preventDefault();
@@ -79,7 +118,7 @@ export default class UserDash extends Component{
     handleSearchSubmit = (e) =>{
 
         e.preventDefault();
-        console.log(this.state.searchValue);
+        
         window.open(`/blogger/${this.state.searchValue}`, "_blank");
         this.setState({
             searchValue:""
@@ -189,7 +228,6 @@ export default class UserDash extends Component{
                 'Content-Type': 'application/json'
             }
         }).then(res=>{
-            console.log(res);
             this.clickMyBlogs();
             alert("Blog Deleted Successfully !!!")
         });
@@ -340,6 +378,7 @@ export default class UserDash extends Component{
                                     <Avatar alt="profile" src={defaultProfile} />
                                 </MenuItem>
                                 <MenuItem disabled>{this.props.user.name}</MenuItem>
+                                <MenuItem onClick={this.handleAccountDelete}>Delete Account </MenuItem>
                                 <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                             </Menu> 
                             :
