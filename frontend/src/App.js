@@ -7,6 +7,8 @@ import {Route,Switch, withRouter} from 'react-router-dom';
 import './App.css';
 import SearchResult from './components/SearchResult';
 
+import Forbidden from './components/error/403'
+import NotFound from './components/error/404'
  class App extends Component {
 
   constructor(props){
@@ -27,7 +29,8 @@ import SearchResult from './components/SearchResult';
     this.setState({
       activeUser:undefined
     });
-    this.props.history.push('/');
+    localStorage.removeItem("jwt");
+    this.props.history.replace('/');
   }
 
   handleBlogData = (data)=>{
@@ -40,10 +43,16 @@ import SearchResult from './components/SearchResult';
         <div className="App">
           <Switch>
             <Route exact path="/" render={(routeParams)=><Homepage handleAuth={(user)=>this.handleAuth(user)} {...routeParams}/>} />
-            <Route exact path="/new-blog" render={(routeParams)=><NewBlog user={this.state.activeUser} {...routeParams} />} />
+            <Route exact path="/new-blog" render={(routeParams)=><NewBlog {...routeParams} />} />
             <Route exact path="/blogger/:search" render={(routeParams)=><SearchResult {...routeParams} /> } />
             <Route exact path="/user" render={(routeParams) => <UserDash logout={this.logout} editBlog={(data)=>this.handleBlogData(data)} user={this.state.activeUser} {...routeParams} />} />
             <Route exact path="/edit-blog" render={(routeParams)=><EditBlog data={this.state.blogData} {...routeParams} />} />
+
+
+                                                    {/* Error Pages */}
+            <Route exact path='/error/forbidden' render={(routeParams)=><Forbidden {...routeParams} />} />
+            <Route exact path='*' render={(routeParams) => <NotFound {...routeParams} />} />
+
           </Switch>
         </div>
 ); 
