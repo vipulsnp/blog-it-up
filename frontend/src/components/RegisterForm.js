@@ -82,7 +82,7 @@ export default class RegisterForm extends Component {
 
         firebase.auth().createUserWithEmailAndPassword(email, password).then(res=>{
 
-            fetch('http://localhost:5000/api/create-user', {
+            fetch('/api/create-user', {
                 method: 'POST',
                 body: JSON.stringify(newUser),
                 headers: {

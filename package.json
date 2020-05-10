@@ -6,9 +6,9 @@
   "dependencies": {"concurrently": "^3.5.1"},
   "scripts": {
     "dev":"concurrently \"cd frontend && npm start\" \"cd backend && npm run server\"",
-    "start": "concurrently \"cd frontend && npm start\" \"cd backend && npm start\"",
+    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild":"concurrently \"cd backend && npm install\" \"cd frontend && npm install && npm build\""
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix backend" 
   },
   "author": "Vipul Sharma",
   "license": "ISC",
