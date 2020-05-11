@@ -69,6 +69,12 @@ export default class RegisterForm extends Component {
             "email":this.state.email
         }
 
+        if(this.state.password.length<6)
+        {
+            alert("Password should consist of atleast 6 characters");
+            return;
+        }
+
         const {email,password}=this.state;
 
         this.setState({
