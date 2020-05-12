@@ -69,6 +69,12 @@ export default class RegisterForm extends Component {
             "email":this.state.email
         }
 
+        if(this.state.password.length<6)
+        {
+            alert("Password should consist of atleast 6 characters");
+            return;
+        }
+
         const {email,password}=this.state;
 
         this.setState({
@@ -82,7 +88,7 @@ export default class RegisterForm extends Component {
 
         firebase.auth().createUserWithEmailAndPassword(email, password).then(res=>{
 
-            fetch('http://localhost:5000/api/create-user', {
+            fetch('/api/create-user', {
                 method: 'POST',
                 body: JSON.stringify(newUser),
                 headers: {

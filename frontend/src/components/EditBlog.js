@@ -5,6 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import '../public/css/NewBlog.css'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 export default class EditBlog extends Component{
 
 
@@ -39,10 +42,10 @@ export default class EditBlog extends Component{
         });
     }
 
-    handleBlogChange = (e) => {
+    handleBlogChange = (data) => {
 
         this.setState({
-            blog: e.target.value
+            blog: data
         });
     }
 
@@ -57,6 +60,15 @@ export default class EditBlog extends Component{
             id:this.props.data._id,
             title:this.state.title,
             blog:this.state.blog
+        }
+
+        if(this.state.blog === '')
+        {
+            alert("Blog Content is Required !");
+            this.setState({
+                loading:false
+            });
+            return;
         }
 
 
@@ -97,18 +109,20 @@ export default class EditBlog extends Component{
                         autoFocus
                     />
                     {/* Blog Here */}
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="blog"
-                        label="Write your Blog Here"
-                        name="blog"
-                        type="text"
-                        multiline
-                        rows={15}
-                        value={this.state.blog}
-                        onChange={this.handleBlogChange}
+
+
+                    <CKEditor
+                        editor={ClassicEditor}
+                        //config={{ placeholder: "Write your Blog ..." }}
+                        onInit={editor => {
+                                    editor.setData(this.state.blog);
+                                }}
+                        id="blog-editor"
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            this.handleBlogChange(data);
+                        }}
+
                     />
                     {
                         this.state.loading === false ? 

@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Blogging App",
   "main": "frontend/index.js",
+  "dependencies": {"concurrently": "^3.5.1"},
   "scripts": {
-    "dev":"concurrently \"cd frontend && npm start\" \"cd backend && npm start\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev":"concurrently \"cd frontend && npm start\" \"cd backend && npm run server\"",
+    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix backend" 
   },
   "author": "Vipul Sharma",
   "license": "ISC",

@@ -34,6 +34,18 @@
 }
 
 
+.card-content-blog{
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.ck-read-only{
+    background-color: transparent !important;
+    height: auto !important;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
 @media only screen and (max-width:400px)
 {
     .root{

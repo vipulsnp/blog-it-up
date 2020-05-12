@@ -14,3 +14,21 @@
     color: whitesmoke !important;
     max-width: 90%;
 }
+
+.ck.ck-editor{
+    width: 100%;
+    max-width: 630px !important;
+}
+
+.ck.ck-editor__editable > .ck-placeholder::before {
+    font-size: 20px;
+    color: inherit;
+    font-family: Georgia;
+}
+.ck.ck-editor__editable_inline[dir=ltr]{
+    height: 300px;
+    font-size: 1.1rem !important;
+    background-color: rgb(256,256,256,0.3);
+    overflow-y: auto !important;
+    overflow-x: auto;
+}

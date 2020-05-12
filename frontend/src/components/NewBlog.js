@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // Import All the CSS here
 
 import '../public/css/NewBlog.css'
@@ -47,9 +48,9 @@ export default class NewBlog extends Component{
             }))
         }
     }
-    handleBlogChange = (e)=>{
+    handleBlogChange = (data)=>{
         this.setState({
-            blog:e.target.value
+            blog:data
         })
     }
 
@@ -69,6 +70,16 @@ export default class NewBlog extends Component{
         let token=localStorage.getItem('jwt');
         var base64Url = token.split('.')[1];
         var decodedValue = JSON.parse(window.atob(base64Url));
+
+        if(this.state.blog === '')
+        {
+            alert("Blog Content is Required!");
+            this.setState({
+                loading:false
+            })
+            return;
+        }
+
         let blog={
             title:this.state.title,
             blog:this.state.blog,
@@ -132,20 +143,19 @@ export default class NewBlog extends Component{
                     autoFocus
                 />
                                                                  {/* Blog Here */}
-                <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="blog"
-                    label="Write your Blog Here"
-                    name="blog"
-                    type="text"
-                    multiline
-                    rows={15}
-                    value={this.state.blog}
-                    onChange={this.handleBlogChange}
-                />
 
+               
+                <CKEditor
+                    editor={ClassicEditor}
+                    config={{ placeholder: "Write your Blog ..." }} 
+                    id="blog-editor"
+                   
+                    onChange={(event, editor) => {
+                        const data = editor.getData();
+                        this.handleBlogChange(data);
+                            }}
+
+                        />
                 {
                     this.state.success === false && this.state.error === false && this.state.loading === false &&   
                         <Button
