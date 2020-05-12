@@ -17,6 +17,10 @@ import SpeakerNotesOffIcon from '@material-ui/icons/SpeakerNotesOff';
 import TextField from '@material-ui/core/TextField';
 
 
+
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import Comments from './ShowComments'
 
 // Import Css here
@@ -114,21 +118,30 @@ class ShowBlog extends Component{
                         />
 
                                             {/* Short Blog */}
-                        {this.props.visible[index] ? null : 
+                    {/**    {this.props.visible[index] ? null :
                             <CardContent>
                                 <Typography variant="body2" color="textSecondary" component="p">
-                                    {blogData.blog.slice(0, 200) + "..."}
+                                    {blogData.shortblog.slice(0, 200) + "..."}
                                 </Typography>
                             </CardContent>
-                        }
+                        } 
+                    /*}
 
                         {/* Full Blog */}
 
                         <Collapse in={this.props.visible[index]} timeout="auto" unmountOnExit>
-                            <CardContent>
-                                <Typography paragraph>
-                                    {blogData.blog}
-                                </Typography>
+                            <CardContent className="card-content-blog">
+                                
+                                   <CKEditor
+                                        editor={ClassicEditor}
+                                        data={blogData.blog}
+                                        disabled
+                                        config={{
+                                            toolbar: [],
+                                        }}    
+                                    />
+
+                                
                             </CardContent>
                         </Collapse>
 
