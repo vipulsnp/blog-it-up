@@ -16,19 +16,19 @@
 }
 
 .ck.ck-editor{
-    width: 100%;
+    width: 100% !important;
     max-width: 630px !important;
 }
 
 .ck.ck-editor__editable > .ck-placeholder::before {
-    font-size: 20px;
+    font-size: 20px !important;
     color: inherit;
     font-family: Georgia;
 }
-.ck.ck-editor__editable_inline[dir=ltr]{
+.ck.ck-editor__editable_inline{
     height: 300px;
     font-size: 1.1rem !important;
-    background-color: rgb(256,256,256,0.3);
+    background-color: transparent !important;
     overflow-y: auto !important;
     overflow-x: auto;
 }
