@@ -28,47 +28,6 @@ export default class LoginForm extends Component{
         }
     }
 
-    async componentDidMount() {
-        var token = localStorage.getItem('jwt');
-
-        if(token)
-        {
-            fetch('/api/authtoken',{
-                method:"POST",
-                headers: { authorization: "Bearer " + token }
-            }).then(res=>res.json().then(data=>{
-                
-                if(data.verifyStatus === true)
-                {
-                    var base64Url = token.split('.')[1];
-                    var decodedValue = JSON.parse(window.atob(base64Url));
-                    var reqBody = {
-                        email: decodedValue.email
-                    }
-                     fetch('/api/login-user', {
-                        method: 'POST',
-                        body: JSON.stringify(reqBody),
-                        headers: {
-                            'Accept': 'application / json',
-                            'Content-Type': 'application/json'
-                        },
-
-                    }).then(res => res.json().then(user => {
-
-                        this.props.handleSignIn(user.user);
-                        this.props.routeParams.history.push("/user");
-                    })
-                    )
-                } // if ends here
-                else
-                {
-                        localStorage.removeItem('jwt');
-                }      
-            }))
-        }
-        
-    }
-
     handleEmailChange = (e) => {
         this.setState({
             email: e.target.value
