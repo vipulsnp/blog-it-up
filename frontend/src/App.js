@@ -3,7 +3,7 @@ import Homepage from './components/Homepage';
 import NewBlog from './components/NewBlog';
 import UserDash from './components/UserDash';
 import EditBlog from './components/EditBlog';
-import {Route,Switch, withRouter} from 'react-router-dom';
+import {Route,Switch, withRouter, Router} from 'react-router-dom';
 import './App.css';
 import SearchResult from './components/SearchResult';
 
@@ -68,6 +68,7 @@ import NotFound from './components/error/404'
             this.setState({
               activeUser:user.user
             })
+            if(this.props.location.pathname === '/')
              this.props.history.replace('/user');
            })
            )
