@@ -3,6 +3,7 @@ import Homepage from './components/Homepage';
 import NewBlog from './components/NewBlog';
 import UserDash from './components/UserDash';
 import EditBlog from './components/EditBlog';
+import Footer from './components/Footer'; 
 import {Route,Switch, withRouter, Router} from 'react-router-dom';
 import './App.css';
 import SearchResult from './components/SearchResult';
@@ -99,6 +100,7 @@ import NotFound from './components/error/404'
             <Route exact path='*' render={(routeParams) => <NotFound {...routeParams} />} />
 
           </Switch>
+          <Footer />
         </div>
 ); 
   }
